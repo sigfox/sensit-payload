@@ -55,6 +55,34 @@ const payload = sensitPayload.serializeConfig(config, sensitPayload.PAYLOAD_TYPE
 // "hdudu"
 ```
 
+## Test
+
+Run test suite with:
+
+```
+npm install
+npm test
+```
+
+## Development
+
+### Requirements
+
+- Install node.js, we recommand nvm to handle multiple version of node on your machine
+- Install node-gyp with `npm install node-gyp -g`
+
+### Build
+
+```
+node-gyp rebuild
+```
+
+### Run
+
+```
+node sample.js
+```
+
 ## Sensit payload specification
 
 ### v2
