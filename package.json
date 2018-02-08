@@ -1,0 +1,17 @@
+{
+  "name": "sensit-payload",
+  "version": "1.0.0",
+  "description": "Sensit Payload",
+  "main": "index.js",
+  "scripts": {
+    "install": "node-gyp rebuild",
+    "test": "node test/parse-test.js"
+  },
+  "dependencies": {
+    "bindings": "^1.2.1"
+  },
+  "devDependencies": {
+    "tap": "^11.1.0"
+  },
+  "gypfile": true
+}
