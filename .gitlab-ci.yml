@@ -1,0 +1,22 @@
+image: node:8.9.4
+
+cache:
+  untracked: true
+  key: "$CI_BUILD_REF_NAME"
+  paths:
+    - node_modules/
+
+stages:
+  - install
+  - test
+  - version
+
+install:
+  stage: install
+  script:
+    - npm
+
+test:
+  stage: test
+  script:
+    - npm test
