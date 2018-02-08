@@ -26,7 +26,7 @@ The object representing the values contained in the payload will always containe
 - `config` {Object} - `null` if the payload does not contain the config
 - `mode` {String} - string representing the current mode, see exposed constants
 - `modeCode` {Number} - number representing the current mode, see exposed constants
-- `batteryLevel` {Number} - number of mV of the battery 
+- `batteryLevel` {Number} - number of mV of the battery
 
 The next properties are present depending of the current mode, in case of a v2 payload when the button is pressed the record corresponding to the mode is not sent except for the temperature in the temperature mode.
 
@@ -53,7 +53,7 @@ The `payloadType` argument is either `sensitPayload.PAYLOAD_TYPE_V2` or `sensitP
 const config = {};
 const payload = sensitPayload.serializeConfig(config, sensitPayload.PAYLOAD_TYPE_V3);
 // "hdudu"
-``
+```
 
 ## Sensit payload specification
 
