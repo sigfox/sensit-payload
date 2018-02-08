@@ -67,4 +67,4 @@ const payload = sensitPayload.serializeConfig(config, sensitPayload.PAYLOAD_TYPE
 
 ## Licence
 
-// TODO add licence
+MIT
