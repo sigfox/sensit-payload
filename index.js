@@ -63,6 +63,29 @@ function round(number, precision = 0) {
 }
 
 /**
+ * Get battery percentage from battery level in mV
+ * @param {Number} batteryLevel - battery level in mV
+ *
+ * @return {Number} battery energy percentage still left
+ */
+
+function getBatteryPercentage(batteryLevel) {
+  const batteryVoltage = batteryLevel / 1000;
+  let batteryPercentage;
+  if (batteryVoltage >= 3.9 && batteryVoltage <= 4.2) {
+    batteryPercentage = Math.round((batteryVoltage - 3.2) * 100);
+  } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.9) {
+    batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
+  } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
+    batteryPercentage = Math.round((batteryVoltage - 2.7) / 0.03);
+  } else {
+    batteryPercentage = 0;
+  }
+  batteryPercentage = batteryPercentage < 0 ? 0 : batteryPercentage;
+  return batteryPercentage;
+}
+
+/**
  * Format object representation of the "data" part of the payload
  * do last changes required to have human readable data with
  * the following instructions:
@@ -107,7 +130,7 @@ function format(data) {
     formattedData.humidity = round(humidity / 2);
   } else if (mode === sensitPayload.MODE_LIGHT && !isV2ButtonPressed) {
     /* Mode LIGHT: Must be divided by 96 to get in lux */
-    formattedData.brightness = round(brightness / 96, 2);
+    formattedData.light = round(brightness / 96, 2);
   } else if (mode === sensitPayload.MODE_STANDBY) {
     formattedData.version = `${versionMajor}.${versionMinor}.${versionPatch}`;
   } else if (mode === sensitPayload.MODE_DOOR && !isV2ButtonPressed) {
@@ -122,6 +145,7 @@ function format(data) {
     formattedData.eventCounter = eventCounter;
   }
   formattedData.button = button === sensitPayload.BUTTON_PRESSED;
+  formattedData.battery = getBatteryPercentage(batteryLevel);
   formattedData.batteryLevel = batteryLevel;
   formattedData.modeCode = mode;
   formattedData.mode = sensitPayload.MODES[formattedData.modeCode];

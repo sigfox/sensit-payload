@@ -27,12 +27,14 @@ The object representing the values contained in the payload will always containe
 - `mode` {String} - string representing the current mode, see exposed constants
 - `modeCode` {Number} - number representing the current mode, see exposed constants
 - `batteryLevel` {Number} - number of mV of the battery
+- `battery` {Number} - percentage of the battery energy still left
+
 
 The next properties are present depending of the current mode, in case of a v2 payload when the button is pressed the record corresponding to the mode is not sent except for the temperature in the temperature mode.
 
 - `temperature` {Number} - temperature in celsius degrees
 - `humidity` {Number} - humidity in percent
-- `brightness` {Number} - brightness in lux
+- `light` {Number} - brightness in lux
 - `magnet` {Boolean} - `true` when magnet detected, `false` otherwise
 - `vibration` {Number} - a number representing vibration state, see exposed constants
 - `door` {Number} - a number representing door state, see exposed constants

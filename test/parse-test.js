@@ -13,12 +13,13 @@ const samples = [
     expected: {
       error: 0,
       type: 3,
-      brightness: 1.05,
+      light: 1.05,
       button: false,
       modeCode: 2,
       mode: 'light',
       config: null,
-      batteryLevel: 4200
+      batteryLevel: 4200,
+      battery: 100
     }
   },
   // Mode temperature
@@ -33,7 +34,8 @@ const samples = [
       batteryLevel: 4200,
       modeCode: 1,
       mode: 'temperature',
-      config: null
+      config: null,
+      battery: 100
     }
   },
   // Mode magnet
@@ -48,7 +50,8 @@ const samples = [
       modeCode: 5,
       mode: 'magnet',
       config: null,
-      eventCounter: 1
+      eventCounter: 1,
+      battery: 90
     }
   }
 ];
