@@ -15,4 +15,5 @@ test:
     - npm install -g node-gyp
     - npm install
     - node-gyp rebuild
-    - npm test
+    - npm run test-parse
+    - npm run test-serialize

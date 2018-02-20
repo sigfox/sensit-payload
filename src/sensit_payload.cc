@@ -1,98 +1,75 @@
 /*!******************************************************************
- * \file payload.c
+ * \file sensit_payload.c
  * \brief Functions to parse a Sens'it payload
  * \author Sens'it Team
- * \copyright Copyright (c) 2018 Sigfox, All Rights Reserved.
  *******************************************************************/
 /******* INCLUDES **************************************************/
-#include "sensit_payload.h"
 #include <stdio.h>
-
-
+#include <string.h>
+#include "sensit_payload.h"
+#include "sensit_payload_v3.h"
+#include "sensit_payload_v2.h"
 
 /******* DEFINE ****************************************************/
-#define BATTERY_OFFSET         2700 /* 2.7 V  */
-#define BATTERY_STEP           50   /* 50 mV */
-#define TEMPERATURE_OFFSET     200  /* 25°C */
-
-
-/******* STATIC FUNCTION *******************************************/
-static void my_memcpy(u8* data_out, u8* data_in, u32 data_size);
-
+#define PAYLOAD_V3_ID 0b110
+#define V3_ID 3
+#define V2_ID 2
 
 /*******************************************************************/
 
-void PAYLOAD_parse_data(u8* data_in, data_s* data_out)
+void PAYLOAD_parse_data(u8 *data_in, data_s *data_out)
 {
-    payload_s payload;
-
-    my_memcpy((u8*)&payload, data_in, DATA_SIZE);
-
-    // printf("reserved-> %d: ", payload.reserved);
+    payload_v3_s payload3;
+    payload_v2_s payload2;
+    memcpy(&(payload3.data), data_in, PAYLOAD_DATA_SIZE);
+    memcpy(&(payload2.data), data_in, PAYLOAD_DATA_SIZE);
 
     data_out->error = PARSE_ERR_NONE;
 
-    if ( payload.reserved == 0b110 )
+    if (payload3.data.reserved == PAYLOAD_V3_ID)
     {
         data_out->type = PAYLOAD_V3;
+        PAYLOAD_V3_parse_data(payload3, data_out);
+    }
+    else if (payload3.data.reserved < PAYLOAD_V3_ID)
+    {
+        data_out->type = PAYLOAD_V2;
+        PAYLOAD_V2_parse_data(payload2, data_out);
     }
     else
     {
         data_out->error = PARSE_ERR_TYPE;
-        return;
-    }
-
-    data_out->mode = (mode_e) payload.mode;
-    data_out->button = payload.button;
-    data_out->battery_level = (payload.battery*BATTERY_STEP) + BATTERY_OFFSET;
-
-    if ( payload.mode == MODE_STANDBY )
-    {
-        data_out->version_major = payload.fw_major;
-        data_out->version_minor = (payload.fw_minorMSB << 4) | payload.fw_minorLSB;
-        data_out->version_patch = payload.fw_patch;
-    }
-    else if ( payload.mode == MODE_TEMPERATURE )
-    {
-        data_out->temperature = (payload.spare << 8) | payload.temperatureLSB;
-        data_out->temperature -= TEMPERATURE_OFFSET;
-        data_out->humidity = payload.humidity;
-    }
-    else if ( payload.mode == MODE_LIGHT )
-    {
-        data_out->brightness = (payload.brightnessMSB << 8) | payload.brightnessLSB;
-    }
-    else if ( payload.mode == MODE_DOOR )
-    {
-        data_out->door = (door_e) payload.spare;
-        data_out->event_counter = (payload.event_counterMSB << 8) | payload.event_counterLSB;
-    }
-    else if ( payload.mode == MODE_VIBRATION )
-    {
-        data_out->vibration = (vibration_e) payload.spare;
-        data_out->event_counter = (payload.event_counterMSB << 8) | payload.event_counterLSB;
-    }
-    else if ( payload.mode == MODE_MAGNET )
-    {
-        data_out->magnet = payload.spare;
-        data_out->event_counter = (payload.event_counterMSB << 8) | payload.event_counterLSB;
-    }
-    else
-    {
-        data_out->error = PARSE_ERR_MODE;
     }
 }
 
 /*******************************************************************/
 
-static void my_memcpy(u8* data_out, u8* data_in, u32 data_size)
+void PAYLOAD_parse_config(u8 *data_in, payload_type_e type, config_s *config_out)
 {
-    u32 i;
+    payload_v3_s payload3;
+    payload_v2_s payload2;
 
-    for (i=0 ; i < data_size ; i++)
+    memcpy(&(payload3.config), data_in, PAYLOAD_CONFIG_SIZE);
+    memcpy(&(payload2.config), data_in, PAYLOAD_CONFIG_SIZE);
+
+    if (type == V3_ID)
     {
-        *(data_out+i) = *(data_in+i);
+        PAYLOAD_V3_parse_config(payload3, config_out);
+    }
+    else if (type == V2_ID)
+    {
+        PAYLOAD_V2_parse_config(payload2, config_out);
     }
 }
 
-/*******************************************************************/
+void PAYLOAD_serialize_config(config_s config_in, payload_type_e type, u8 *config_out)
+{
+    if (type == V3_ID)
+    {
+        PAYLOAD_V3_serialize_config(config_in, config_out);
+    }
+    else if (type == V2_ID)
+    {
+        PAYLOAD_V2_serialize_config(config_in, config_out);
+    }
+}

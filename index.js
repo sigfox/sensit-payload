@@ -32,8 +32,10 @@ sensitPayload.MODES = {
 };
 
 sensitPayload.DOOR_NONE = 0b00;
-sensitPayload.DOOR_OPENING = 0b01;
-sensitPayload.DOOR_CLOSING = 0b10;
+sensitPayload.DOOR_MOVEMENT = 0b01;
+sensitPayload.DOOR_CLOSE = 0b10;
+sensitPayload.DOOR_OPEN = 0b11
+sensitPayload.DOOR_LAST;
 
 sensitPayload.VIBRATION_NONE = 0b00;
 sensitPayload.VIBRATION_START = 0b01;
@@ -47,6 +49,41 @@ sensitPayload.PARSE_ERR_MODE = 0x02;
 sensitPayload.BUTTON_PRESSED = 1;
 
 sensitPayload.MAGNET_DETECTED = 1;
+
+/* Expose config */
+sensitPayload.VIBRATION_CONFIG_UNKNOW = 0b00000;
+sensitPayload.VIBRATION_VERY_SENSITIVE = 0b00001;
+sensitPayload.VIBRATION_SENSITIVE = 0b00010;
+sensitPayload.VIBRATION_STANDARD = 0b00011;
+sensitPayload.VIBRATION_NOT_VERY_SENSITIVE = 0b000100;
+sensitPayload.VIBRATION_VERY_LITTLE_SENSITIVE = 0b00101;
+
+
+sensitPayload.VIBRATION_ENABLE_END_MESSAGE = 0b00;
+sensitPayload.VIBRATION_CLEAR_DELAY_10S = 0b01;
+sensitPayload.VIBRATION_CLEAR_DELAY_30S = 0b10;
+sensitPayload.VIBRATION_CLEAR_DELAY_60S = 0b11;
+sensitPayload.VIBRATION_CLEAR_DELAY_LAST;
+
+sensitPayload.DOOR_CONFIG_UNKNOW = 0b00;
+sensitPayload.DOOR_SENSITIVE = 0b01;
+sensitPayload.DOOR_STANDARD = 0b10;
+sensitPayload.DOOR_NOT_VERY_SENSITIVE = 0b11;
+
+sensitPayload.UPLINK_PERIOD_10M = 0b00;
+sensitPayload.UPLINK_PERIOD_1H = 0b01;
+sensitPayload.UPLINK_PERIOD_6H = 0b10;
+sensitPayload.UPLINK_PERIOD_24H = 0b11;
+sensitPayload.UPLINK_PERIOD_LAST;
+
+sensitPayload.UPLINK_PERIODS = {
+  [sensitPayload.UPLINK_PERIOD_10M]: 600,
+  [sensitPayload.UPLINK_PERIOD_1H]: 3600,
+  [sensitPayload.UPLINK_PERIOD_6H]: 21600,
+  [sensitPayload.UPLINK_PERIOD_24H]: 86400,
+};
+
+
 
 /**
  * Round number with the given `precision`
@@ -111,7 +148,7 @@ function getBatteryPercentage(batteryLevel) {
  * @return {Object}
  */
 
-function format(data) {
+function formatData(data) {
   const {
     mode, button, magnet, temperature, brightness,
     humidity, versionMajor, versionMinor, versionPatch,
@@ -127,7 +164,7 @@ function format(data) {
   }
   if (mode === sensitPayload.MODE_TEMPERATURE && !isV2ButtonPressed) {
     /* Mode TEMPERATURE: Must be divided by 2 to get in % */
-    formattedData.humidity = round(humidity / 2);
+    formattedData.humidity = round(humidity / 2, 1);
   } else if (mode === sensitPayload.MODE_LIGHT && !isV2ButtonPressed) {
     /* Mode LIGHT: Must be divided by 96 to get in lux */
     formattedData.light = round(brightness / 96, 2);
@@ -151,6 +188,65 @@ function format(data) {
   formattedData.mode = sensitPayload.MODES[formattedData.modeCode];
   return formattedData;
 }
+
+/**
+ * Format object representation of the "config" part of the payload
+ *
+ *
+ * @param {Object} data
+ *
+ * @return {Object}
+ */
+
+function formatConfig(config, type) {
+  const SHARED_FIELDS = [
+    "temperatureLower",
+    "temperatureUpper",
+    "humidityLower",
+    "humidityUpper",
+    "vibrationSensitivity",
+    "vibrationClearTime",
+    "door",
+    "period",
+    "limited"
+  ]
+  const V3_FIELDS = [
+    "lightThreshold",
+    "isStandByPeriodic",
+    "isTemperaturePeriodic",
+    "isLightPeriodic",
+    "isDoorPeriodic",
+    "isVibrationPeriodic",
+    "isMagnetPeriodic"];
+
+  const V2_FIELDS = [
+    "lightUpper",
+    "lightLower"
+  ]
+
+  config.limited = !!config.limited;
+  if (type === 2) {
+    config.lightUpper = config.lightUpper / 96;
+    config.lightLower = config.lightLower / 96;
+  }
+  else if (type === 3) {
+    config.isStandByPeriodic = !!config.isStandByPeriodic;
+    config.isTemperaturePeriodic = !!config.isTemperaturePeriodic;
+    config.isDoorPeriodic = !!config.isDoorPeriodic;
+    config.isVibrationPeriodic = !!config.isVibrationPeriodic;
+    config.isMagnetPeriodic = !!config.isMagnetPeriodic;
+    config.isLightPeriodic = !!config.isLightPeriodic;
+  }
+  //Equivalent of lodash pick in es2017
+  const res = Object.assign(
+    {},
+    ...(type === 3 ? V3_FIELDS.concat(SHARED_FIELDS) : V2_FIELDS.concat(SHARED_FIELDS))
+      .map(key => ({ [key]: config[key] }))
+  )
+
+  return config;
+}
+
 
 /**
  * Parse Sensit payload 4 bytes of "data" and the 8 bytes of "config" if present
@@ -194,7 +290,7 @@ sensitPayload.parseData = (payload) => {
     throw new Error('Sensit payload "data" part is made of 8 hexadecimal characters');
   }
   const data = lib.parseData(Buffer.from(payload, 'hex'));
-  return format(data);
+  return formatData(data);
 };
 
 /**
@@ -205,13 +301,13 @@ sensitPayload.parseData = (payload) => {
  * @return {Object} config
  */
 
-sensitPayload.parseConfig = (payload) => {
+sensitPayload.parseConfig = (payload, type) => {
   // Check payload size
   if (payload.length !== 16) {
     throw new Error('Sensit payload "config" part is made of 16 hexadecimal characters');
   }
-  const config = lib.parseConfig(Buffer.from(payload, 'hex'));
-  return config;
+  const config = lib.parseConfig(Buffer.from(payload, 'hex'), type);
+  return formatConfig(config, type);
 };
 
 /**
@@ -239,7 +335,7 @@ sensitPayload.serializeConfig = (config, payloadType) => {
  * @return {String} payload
  */
 
-sensitPayload.serializeV2Config = config => lib.serializeConfig(config, sensitPayload.PAYLOAD_TYPE_V2);
+sensitPayload.serializeV2Config = config => lib.serializeConfig(config, sensitPayload.PAYLOAD_TYPE_V2).toString('hex');
 
 /**
  * Serialize Sens'it V3 config object representation into a hexadecimal string
@@ -249,7 +345,7 @@ sensitPayload.serializeV2Config = config => lib.serializeConfig(config, sensitPa
  * @return {String} payload
  */
 
-sensitPayload.serializeV3Config = config => lib.serializeConfig(config, sensitPayload.PAYLOAD_TYPE_V3);
+sensitPayload.serializeV3Config = config => lib.serializeConfig(config, sensitPayload.PAYLOAD_TYPE_V3).toString('hex');
 
 
 /**
