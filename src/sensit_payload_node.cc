@@ -211,7 +211,7 @@ void SerializeConfig(const v8::FunctionCallbackInfo<v8::Value> &args)
   config.period = period->NumberValue();
 
   v8::Local<v8::Value> delay =
-      config_in->Get(v8::String::NewFromUtf8(isolate, "delay"));
+      config_in->Get(v8::String::NewFromUtf8(isolate, "vibrationClearTime"));
   config.delay = delay->NumberValue();
 
   double type = args[1]->NumberValue();
