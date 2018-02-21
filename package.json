@@ -1,6 +1,6 @@
 {
   "name": "sensit-payload",
-  "version": "0.4.0",
+  "version": "0.3.2",
   "description": "Sensit Payload",
   "main": "index.js",
   "scripts": {
