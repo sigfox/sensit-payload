@@ -10,7 +10,7 @@ const samples = [
   // v3 config
   {
     type: 3,
-    expected: '46003f0f8004023c',
+    expected: '46003f0f8004223c',
     actual: {
       limited: true,
       isStandByPeriodic: false,
