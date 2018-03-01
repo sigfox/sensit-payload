@@ -38,6 +38,7 @@ The next properties are present depending on the current mode, in case of a v2 p
 - `magnet` {Boolean} - `true` when magnet detected, `false` otherwise
 - `vibration` {Number} - a number representing vibration state, see exposed constants
 - `door` {Number} - a number representing door state, see exposed constants
+- `eventCounter` {Number} - number of times the event was catched
 
 ```
 const data = sensitPayload.parse("f6100065")
