@@ -60,7 +60,7 @@ const samples = [
 samples.forEach((sample) => {
   tap.test(`sensitPayload.parse(${sample})`, (t) => {
     const actual = sensitPayload.serializeConfig(sample.actual, sample.type);
-    t.same(actual, sample.expected);
+    t.strictSame(actual, sample.expected);
     t.end();
   });
 });

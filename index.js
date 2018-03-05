@@ -37,10 +37,8 @@ sensitPayload.DOOR_CLOSE = 0b10;
 sensitPayload.DOOR_OPEN = 0b11
 sensitPayload.DOOR_LAST;
 
-sensitPayload.VIBRATION_NONE = 0b00;
-sensitPayload.VIBRATION_START = 0b01;
-sensitPayload.VIBRATION_STOP = 0b10;
-sensitPayload.VIBRATION_ONGOING = 0b11;
+sensitPayload.VIBRATION_NONE = 0;
+sensitPayload.VIBRATION_ONGOING = 1;
 
 sensitPayload.PARSE_ERR_NONE = 0x00;
 sensitPayload.PARSE_ERR_TYPE = 0x01;
@@ -48,6 +46,7 @@ sensitPayload.PARSE_ERR_MODE = 0x02;
 
 sensitPayload.BUTTON_PRESSED = 1;
 
+sensitPayload.MAGNET_NOT_DETECTED = 0;
 sensitPayload.MAGNET_DETECTED = 1;
 
 /* Expose config */
@@ -178,7 +177,7 @@ function formatData(data) {
     formattedData.magnet = magnet === sensitPayload.MAGNET_DETECTED;
     formattedData.eventCounter = eventCounter;
   } else if (mode === sensitPayload.MODE_VIBRATION && !isV2ButtonPressed) {
-    formattedData.vibration = vibration;
+    formattedData.vibration = vibration === sensitPayload.VIBRATION_ONGOING;
     formattedData.eventCounter = eventCounter;
   }
   formattedData.button = button === sensitPayload.BUTTON_PRESSED;

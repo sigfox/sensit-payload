@@ -6,7 +6,8 @@
   "scripts": {
     "install": "node-gyp rebuild",
     "test-parse": "node test/parse-test.js",
-    "test-serialize": "node test/serialize-test.js"
+    "test-serialize": "node test/serialize-test.js",
+    "test": "node test/*-test.js"
   },
   "dependencies": {
     "bindings": "^1.2.1"

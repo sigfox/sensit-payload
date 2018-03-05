@@ -150,7 +150,7 @@ const samples = [
 samples.forEach((sample) => {
   tap.test(`sensitPayload.parse(${sample.payload})`, (t) => {
     const actual = sensitPayload.parse(sample.payload);
-    t.same(actual, sample.expected);
+    t.strictSame(actual, sample.expected);
     t.end();
   });
 });

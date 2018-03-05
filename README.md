@@ -36,7 +36,7 @@ The next properties are present depending on the current mode, in case of a v2 p
 - `humidity` {Number} - humidity in percent
 - `light` {Number} - brightness in lux
 - `magnet` {Boolean} - `true` when magnet detected, `false` otherwise
-- `vibration` {Number} - a number representing vibration state, see exposed constants
+- `vibration` {Boolean} - `true` when vibration is ongoing, `false` otherwise
 - `door` {Number} - a number representing door state, see exposed constants
 - `eventCounter` {Number} - number of times the event was catched
 
@@ -46,13 +46,13 @@ const data = sensitPayload.parse("f6100065")
 ```
 
 ### sensitPayload.parseConfig(config, payloadType)
-The config is different depending on the current verion: 
+The config is different depending on the current verion:
 
 #### V3 specific fields
 - `isStandByPeriodic` {Boolean} - true if StandBy is in periodic mode
 - `isTemperaturePeriodic` {Boolean} - true if Temperature is in periodic mode
 - `isDoorPeriodic` {Boolean} - true if Door is in periodic mode
-- `isMagnetPeriodic`{Boolean} - true if Magnet is in periodic mode 
+- `isMagnetPeriodic`{Boolean} - true if Magnet is in periodic mode
 - `isVibrationPeriodic`{Boolean} - true if Vibration is in periodic mode
 - `isLightPeriodic`{Boolean} - true if Light is in periodic mode
 - `lightThreshold`{Number} - the brightness threshold
@@ -64,7 +64,7 @@ The config is different depending on the current verion:
 - `lightUpper` {Number} - upper brightness threshold
 - `lightLower` {Number} - lower brightness threshold
 
-#### Shared fields 
+#### Shared fields
 - `temperatureLower`{Number} - lower temperature threshold
 - `temperatureUpper`{Number} - upper temperature threshold
 - `humidityLower`{Number} - lower humidity threshold
@@ -73,7 +73,7 @@ The config is different depending on the current verion:
 - `lightUpper`{Number} - upper light threshold
 - `vibrationSensitivity`{Number} - code that indicates how sensitive is the vibration sensor
 - `door`{Number} - code that indicates how sensitive is the door detection
-- `period`{Number} 
+- `period`{Number}
 - `limited`{Boolean}
 
 ##### Example
