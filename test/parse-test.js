@@ -19,7 +19,7 @@ const samples = [
       mode: 'light',
       config: null,
       batteryLevel: 4200,
-      battery: 100
+      battery: 95
     }
   },
   // Mode temperature v3
@@ -35,7 +35,7 @@ const samples = [
       modeCode: 1,
       mode: 'temperature',
       config: null,
-      battery: 100
+      battery: 95
     }
   },
   // Mode door v3
@@ -83,7 +83,7 @@ const samples = [
       mode: 'magnet',
       config: null,
       eventCounter: 1,
-      battery: 90
+      battery: 85
     }
   },
   // Mode standby v3 + config
@@ -126,7 +126,7 @@ const samples = [
       type: 2,
       button: false,
       batteryLevel: 4150,
-      battery: 95,
+      battery: 90,
       modeCode: 1,
       mode: 'temperature',
       temperature: 19,
