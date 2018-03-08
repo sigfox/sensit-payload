@@ -31,10 +31,12 @@ sensitPayload.MODES = {
   [sensitPayload.MODE_MAGNET]: 'magnet'
 };
 
-sensitPayload.DOOR_NONE = 0b00;
-sensitPayload.DOOR_MOVEMENT = 0b01;
-sensitPayload.DOOR_CLOSE = 0b10;
-sensitPayload.DOOR_OPEN = 0b11
+sensitPayload.DOOR_NONE = 0b000;
+sensitPayload.DOOR_MOVEMENT = 0b001;
+sensitPayload.DOOR_CLOSE = 0b010;
+sensitPayload.DOOR_OPEN = 0b011;
+sensitPayload.DOOR_NOT_CALIBRATED = 0b100;
+
 sensitPayload.DOOR_LAST;
 
 sensitPayload.VIBRATION_NONE = 0;
@@ -108,8 +110,8 @@ function round(number, precision = 0) {
 function getBatteryPercentage(batteryLevel) {
   const batteryVoltage = batteryLevel / 1000;
   let batteryPercentage;
-  if (batteryVoltage >= 3.9 && batteryVoltage <= 4.2) {
-    batteryPercentage = Math.round((batteryVoltage - 3.2) * 100);
+  if (batteryVoltage >= 3.9 && batteryVoltage <= 4.25) {
+    batteryPercentage = Math.round((batteryVoltage - 3.25) * 100);
   } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.9) {
     batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
   } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
@@ -170,7 +172,12 @@ function formatData(data) {
   } else if (mode === sensitPayload.MODE_STANDBY) {
     formattedData.version = `${versionMajor}.${versionMinor}.${versionPatch}`;
   } else if (mode === sensitPayload.MODE_DOOR && !isV2ButtonPressed) {
-    formattedData.door = door;
+    //if v3 and DOOR DONE return DOOR_NOT_CALIBRATED type === sensitPayload.PAYLOAD_TYPE_V3
+    if (door === DOOR_NONE && type === sensitPayload.PAYLOAD_TYPE_V3) {
+      formattedData.door = DOOR_NOT_CALIBRATED;
+    } else {
+      formattedData.door = door;
+    }
     formattedData.eventCounter = eventCounter;
   } else if (mode === sensitPayload.MODE_MAGNET && !isV2ButtonPressed) {
     /* Mode MAGNET: if 1, Magnet detected */
