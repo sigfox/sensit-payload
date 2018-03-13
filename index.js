@@ -16,6 +16,37 @@ const sensitPayload = module.exports = exports;
 sensitPayload.PAYLOAD_TYPE_V2 = 2;
 sensitPayload.PAYLOAD_TYPE_V3 = 3;
 
+sensitPayload.DEFAULT_CONFIG_V2 = {
+  temperatureLower: -20,
+  temperatureUpper: 107,
+  humidityLower: 0,
+  humidityUpper: 0,
+  lightUpper: 10,
+  lightLower: 0,
+  vibrationSensitivity: 2,
+  door: 0,
+  period: 1,
+  limited: true
+};
+sensitPayload.DEFAULT_CONFIG_V3 = {
+  limited: true,
+  isStandByPeriodic: false,
+  isTemperaturePeriodic: true,
+  isLightPeriodic: true,
+  isDoorPeriodic: false,
+  isVibrationPeriodic: false,
+  isMagnetPeriodic: false,
+  temperatureLower: -9,
+  temperatureUpper: 54,
+  humidityLower: 30,
+  humidityUpper: 90,
+  lightThreshold: 1,
+  vibrationSensitivity: 2,
+  vibrationClearTime: 2,
+  door: 1,
+  period: 1
+};
+
 sensitPayload.MODE_STANDBY = 0b00000;
 sensitPayload.MODE_TEMPERATURE = 0b00001;
 sensitPayload.MODE_LIGHT = 0b00010;
