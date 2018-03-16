@@ -205,7 +205,7 @@ function formatData(data) {
   } else if (mode === sensitPayload.MODE_DOOR && !isV2ButtonPressed) {
     //if v3 and DOOR DONE return DOOR_NOT_CALIBRATED type === sensitPayload.PAYLOAD_TYPE_V3
     if (door === sensitPayload.DOOR_NONE && type === sensitPayload.PAYLOAD_TYPE_V3) {
-      formattedData.door = DOOR_NOT_CALIBRATED;
+      formattedData.door = sensitPayload.DOOR_NOT_CALIBRATED;
     } else {
       formattedData.door = door;
     }

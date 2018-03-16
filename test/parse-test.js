@@ -40,6 +40,22 @@ const samples = [
   },
   // Mode door v3
   {
+    payload: 'b6180000',
+    expected: {
+      error: 0,
+      type: 3,
+      button: false,
+      door: 4,
+      battery: 53,
+      batteryLevel: 3800,
+      modeCode: 3,
+      mode: 'door',
+      eventCounter: 0,
+      config: null
+    }
+  },
+  // Mode door v3
+  {
     payload: 'b61e0000',
     expected: {
       error: 0,
