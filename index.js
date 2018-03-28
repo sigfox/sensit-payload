@@ -140,15 +140,23 @@ function round(number, precision = 0) {
 
 function getBatteryPercentage(batteryLevel) {
   const batteryVoltage = batteryLevel / 1000;
-  let batteryPercentage;
+  let batteryPercentage = 0;
+  let battery = 0;
   if (batteryVoltage >= 3.9 && batteryVoltage <= 4.25) {
     batteryPercentage = Math.round((batteryVoltage - 3.25) * 100);
+    batteryLevel = 4;
   } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.9) {
+    batteryLevel = 2;
+    if (batteryVoltage > 3.7) {
+      batteryLevel = 3;
+    }
     batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
   } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
+    batteryLevel = 0
+    if (batteryVoltage > 3.1) {
+      batteryLevel = 1;
+    }
     batteryPercentage = Math.round((batteryVoltage - 2.7) / 0.03);
-  } else {
-    batteryPercentage = 0;
   }
   batteryPercentage = batteryPercentage < 0 ? 0 : batteryPercentage;
   return batteryPercentage;
