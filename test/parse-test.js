@@ -19,7 +19,8 @@ const samples = [
       mode: 'light',
       config: null,
       batteryLevel: 4200,
-      battery: 95
+      battery: 95,
+      batteryIndicator: 4
     }
   },
   // Mode temperature v3
@@ -35,7 +36,8 @@ const samples = [
       modeCode: 1,
       mode: 'temperature',
       config: null,
-      battery: 95
+      battery: 95,
+      batteryIndicator: 4
     }
   },
   // Mode door v3
@@ -51,7 +53,8 @@ const samples = [
       modeCode: 3,
       mode: 'door',
       eventCounter: 0,
-      config: null
+      config: null,
+      batteryIndicator: 3
     }
   },
   // Mode door v3
@@ -67,7 +70,8 @@ const samples = [
       modeCode: 3,
       mode: 'door',
       eventCounter: 0,
-      config: null
+      config: null,
+      batteryIndicator: 3
     }
   },
   // Mode vibration v3
@@ -84,6 +88,7 @@ const samples = [
       mode: 'vibration',
       eventCounter: 400,
       config: null,
+      batteryIndicator: 3
     }
   },
   // Mode magnet v3
@@ -99,7 +104,8 @@ const samples = [
       mode: 'magnet',
       config: null,
       eventCounter: 1,
-      battery: 85
+      battery: 85,
+      batteryIndicator: 4,
     }
   },
   // Mode standby v3 + config
@@ -111,6 +117,7 @@ const samples = [
       button: false,
       batteryLevel: 3750,
       battery: 45,
+      batteryIndicator: 3,
       modeCode: 0,
       mode: 'standby',
       version: '3.1.0',
@@ -143,6 +150,7 @@ const samples = [
       button: false,
       batteryLevel: 4150,
       battery: 90,
+      batteryIndicator: 4,
       modeCode: 1,
       mode: 'temperature',
       temperature: 19,

@@ -141,25 +141,25 @@ function round(number, precision = 0) {
 function getBatteryPercentage(batteryLevel) {
   const batteryVoltage = batteryLevel / 1000;
   let batteryPercentage = 0;
-  let battery = 0;
+  let batteryIndicator = 4;
   if (batteryVoltage >= 3.9 && batteryVoltage <= 4.25) {
     batteryPercentage = Math.round((batteryVoltage - 3.25) * 100);
-    batteryLevel = 4;
+    batteryIndicator = 4;
   } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.9) {
-    batteryLevel = 2;
+    batteryIndicator = 2;
     if (batteryVoltage > 3.7) {
-      batteryLevel = 3;
+      batteryIndicator = 3;
     }
     batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
   } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
-    batteryLevel = 0
+    batteryIndicator = 0
     if (batteryVoltage > 3.1) {
-      batteryLevel = 1;
+      batteryIndicator = 1;
     }
     batteryPercentage = Math.round((batteryVoltage - 2.7) / 0.03);
   }
   batteryPercentage = batteryPercentage < 0 ? 0 : batteryPercentage;
-  return batteryPercentage;
+  return { batteryPercentage, batteryIndicator };
 }
 
 /**
@@ -227,7 +227,9 @@ function formatData(data) {
     formattedData.eventCounter = eventCounter;
   }
   formattedData.button = button === sensitPayload.BUTTON_PRESSED;
-  formattedData.battery = getBatteryPercentage(batteryLevel);
+  const { batteryPercentage, batteryIndicator } = getBatteryPercentage(batteryLevel);
+  formattedData.battery = batteryPercentage;
+  formattedData.batteryIndicator = batteryIndicator
   formattedData.batteryLevel = batteryLevel;
   formattedData.modeCode = mode;
   formattedData.mode = sensitPayload.MODES[formattedData.modeCode];
