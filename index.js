@@ -141,25 +141,34 @@ function round(number, precision = 0) {
 function getBatteryPercentage(batteryLevel) {
   const batteryVoltage = batteryLevel / 1000;
   let batteryPercentage = 0;
-  let batteryIndicator = 4;
   if (batteryVoltage >= 3.9 && batteryVoltage <= 4.25) {
     batteryPercentage = Math.round((batteryVoltage - 3.25) * 100);
-    batteryIndicator = 4;
   } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.9) {
+    batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
+  } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
+    batteryPercentage = Math.round((batteryVoltage - 2.7) / 0.03);
+  }
+  batteryPercentage = batteryPercentage < 0 ? 0 : batteryPercentage;
+  return batteryPercentage;
+}
+
+function getBatteryIndicator(batteryLevel) {
+  const batteryVoltage = batteryLevel / 1000;
+  let batteryIndicator = 0;
+  if (batteryVoltage > 3.9) {
+    batteryIndicator = 4;
+  } else if (batteryVoltage >= 3.6 && batteryVoltage <= 3.9) {
     batteryIndicator = 2;
     if (batteryVoltage > 3.7) {
       batteryIndicator = 3;
     }
-    batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
-  } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
+  } else if (batteryVoltage >= 2.7 && batteryVoltage <= 3.6) {
     batteryIndicator = 0
     if (batteryVoltage > 3.1) {
       batteryIndicator = 1;
     }
-    batteryPercentage = Math.round((batteryVoltage - 2.7) / 0.03);
   }
-  batteryPercentage = batteryPercentage < 0 ? 0 : batteryPercentage;
-  return { batteryPercentage, batteryIndicator };
+  return batteryIndicator;
 }
 
 /**
@@ -227,9 +236,8 @@ function formatData(data) {
     formattedData.eventCounter = eventCounter;
   }
   formattedData.button = button === sensitPayload.BUTTON_PRESSED;
-  const { batteryPercentage, batteryIndicator } = getBatteryPercentage(batteryLevel);
-  formattedData.battery = batteryPercentage;
-  formattedData.batteryIndicator = batteryIndicator
+  formattedData.battery = getBatteryPercentage(batteryLevel);
+  formattedData.batteryIndicator = getBatteryIndicator(batteryLevel);
   formattedData.batteryLevel = batteryLevel;
   formattedData.modeCode = mode;
   formattedData.mode = sensitPayload.MODES[formattedData.modeCode];
