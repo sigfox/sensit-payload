@@ -141,16 +141,19 @@ function round(number, precision = 0) {
 function getBatteryPercentage(batteryLevel) {
   const batteryVoltage = batteryLevel / 1000;
   let batteryPercentage = 0;
-  if (batteryVoltage >= 3.9 && batteryVoltage <= 4.25) {
-    batteryPercentage = Math.round((batteryVoltage - 3.25) * 100);
-  } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.9) {
-    batteryPercentage = Math.round((batteryVoltage - 3.48) / 0.006);
-  } else if (batteryVoltage >= 2.7 && batteryVoltage < 3.6) {
-    batteryPercentage = Math.round((batteryVoltage - 2.7) / 0.03);
+  if (batteryVoltage >= 4.15) {
+    batteryPercentage = 100;
+  } else if (batteryVoltage >= 3.8 && batteryVoltage < 4.15) {
+    batteryPercentage = Math.round((batteryVoltage - 3.275) * 114);
+  } else if (batteryVoltage >= 3.6 && batteryVoltage < 3.8) {
+    batteryPercentage = Math.round((batteryVoltage - 3.56) * 250);
+  } else if (batteryVoltage > 3 && batteryVoltage < 3.6) {
+    batteryPercentage = Math.round((batteryVoltage - 3) * 16);
   }
   batteryPercentage = batteryPercentage < 0 ? 0 : batteryPercentage;
   return batteryPercentage;
 }
+
 
 function getBatteryIndicator(batteryLevel) {
   const batteryVoltage = batteryLevel / 1000;
