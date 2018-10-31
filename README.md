@@ -4,13 +4,13 @@ Sensit payload parser and serializer
 
 ## Installation
 
-```
+```sh
 npm install sensit-payload
 ```
 
 ## API
 
-```
+```js
 const sensitPayload = require('sensit-payload');
 ```
 
@@ -40,7 +40,7 @@ The next properties are present depending on the current mode, in case of a v2 p
 - `door` {Number} - a number representing door state, see exposed constants
 - `eventCounter` {Number} - number of times the event was catched
 
-```
+```js
 const data = sensitPayload.parse("f6100065")
 // { error: 0, type: 3, brightness: 1.05, button: false, modeCode: 2, mode: 'light', config: null }
 ```
@@ -77,7 +77,8 @@ The config is different depending on the current verion:
 - `limited`{Boolean}
 
 ##### Example
-```
+
+```js
 const data = sensitPayload.parse("895d205d00ff008f04027390")
 
 data should contain:
@@ -105,13 +106,15 @@ data should contain:
         }
 }
 ```
+
 ### sensitPayload.serializeConfig(config, payloadType)
 
 Serialize an object representating (`config` argument above) Sensit config into a 16 hexadecimals string.
 The `payloadType` argument is either `sensitPayload.PAYLOAD_TYPE_V2` or `sensitPayload.PAYLOAD_TYPE_V3`, other value will throw an error.
 
 #### Example
-```
+
+```js
 const config = {
       isStandByPeriodic: 0,
       isTemperaturePeriodic: 0,
@@ -142,7 +145,7 @@ payload should be equal to 00ff008f04027390
 
 Run test suite with:
 
-```
+```sh
 npm install
 npm test
 ```
@@ -156,13 +159,13 @@ npm test
 
 ### Build
 
-```
+```sh
 node-gyp rebuild
 ```
 
 ### Run
 
-```
+```sh
 node sample.js
 ```
 
@@ -170,11 +173,15 @@ node sample.js
 
 ### v2
 
-// TODO add link to spec
+[PDF document ](https://storage.sbg1.cloud.ovh.net/v1/AUTH_669d7dfced0b44518cb186841d7cbd75/dev_medias/build/4059ad1jm22762b/sensit-2-payload.pdf)
 
 ### v3
 
-// TODO add link to spec
+[PDF document ](https://storage.sbg1.cloud.ovh.net/v1/AUTH_669d7dfced0b44518cb186841d7cbd75/dev_medias/build/4059ah1jm2278g1/sensit-3-discovery-payload.pdf)
+
+### Extra
+
+For more checkout https://build.sigfox.com/sensit-for-developers.
 
 ## Licence
 
