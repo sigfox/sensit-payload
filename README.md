@@ -1,5 +1,7 @@
 # sensit-payload
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/sigfox/sensit-payload.svg)](https://greenkeeper.io/)
+
 Sensit payload parser and serializer
 
 ## Installation
